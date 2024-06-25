@@ -47,7 +47,7 @@ def scrape_amazon_search_results(url):
         price_fraction_section = product.find('span', class_='a-price-fraction')
         price_symbol_section = product.find('span', class_='a-price-symbol')
         if price_whole_section and price_fraction_section and price_symbol_section:
-            product_details['Price'] = price_symbol_section.get_text(strip=True) + price_whole_section.get_text(strip=True) + price_fraction_section.get_text(strip=True)
+            product_details['Price'] = price_symbol_section.get_text(strip=True) + price_whole_section.get_text(strip=True) + ',' + price_fraction_section.get_text(strip=True)
         
         # Extract delivery date
         delivery_section = product.find('span', {'aria-label': True})
@@ -116,6 +116,15 @@ def get_amazon_product_details(url):
             for row in rows:
                 key = row.find('td', {'class': 'a-span3'}).get_text(strip=True)
                 value = row.find('td', {'class': 'a-span9'}).get_text(strip=True)
+                product_details[key] = value
+        
+        # Extract additional specifications from another product details table
+        additional_table = soup.find('table', {'id': 'productDetails_techSpec_section_1'})
+        if additional_table:
+            rows = additional_table.find_all('tr')
+            for row in rows:
+                key = row.find('th', {'class': 'a-color-secondary a-size-base prodDetSectionEntry'}).get_text(strip=True)
+                value = row.find('td', {'class': 'a-size-base prodDetAttrValue'}).get_text(strip=True).replace('\u200e', '')
                 product_details[key] = value
 
     except AttributeError as e:
