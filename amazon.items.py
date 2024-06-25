@@ -47,7 +47,7 @@ def scrape_amazon_search_results(url):
         price_fraction_section = product.find('span', class_='a-price-fraction')
         price_symbol_section = product.find('span', class_='a-price-symbol')
         if price_whole_section and price_fraction_section and price_symbol_section:
-            product_details['Price'] = price_symbol_section.get_text(strip=True) + price_whole_section.get_text(strip=True) + ',' + price_fraction_section.get_text(strip=True)
+            product_details['Price'] = price_symbol_section.get_text(strip=True) + price_whole_section.get_text(strip=True)  + price_fraction_section.get_text(strip=True)
         
         # Extract delivery date
         delivery_section = product.find('span', {'aria-label': True})
